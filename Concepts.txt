@@ -1,0 +1,314 @@
+MySQL
+
+Type of programming we do in MySQL is Declarative and nonprocedural
+	Which means what is needed and not carry about how to 
+
+Here everything is table where the data are stored in a table
+	Stored tabular
+
+Each value are data value
+Each row are called as Record
+Each column are called as Field
+
+Entity = the smallest unit that can contain a meaningful set of data
+
+Entity = Database Object
+
+Horizontal Entity	ROW		entity instance
+
+Vertical Entity		COLUMN
+
+Main Components of SQL's syntax:
+
+Data Definition Language (DDL)		creation of data
+Data Manipulation Language (DML)	manipulation of data	
+Data Control Language (DCL)		assignment and removal of permission to use this data
+Transaction Control Language (TCL)	saving and restoring changes to a database
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+Data Definition Language (DDL):
+
+	SQL Syntax
+	comprises several types of statement that allow you to perform various commands and op
+
+	a syntax
+	a set of statements that allow the user to define or modify data structure and objects
+	such as tables
+
+DDL - CREATE, ALTER, DROP, RENAME, TRUNCATE.
+
+	the CREATE statement
+	used for creating entire databses and database object as tables
+
+CREATE object_type object_name;
+CREATE TABLE object_naem (column_name data_type)
+CREATE TABLE sales (purchase_number INT);
+------------------------------------------------------------------------------
+	
+	the ALTER statement
+	used when altering existing objects
+	- ADD
+	- REMOVE
+	- RENAME
+
+ALTER TABLE sales
+ADD COLUMN date_of_purchase DATE;
+------------------------------------------------------------------------------
+	
+	the DROP statement
+	used when deleting the entire table
+
+DROP TABLE customer;
+------------------------------------------------------------------------------
+
+	the RENAME statement
+	allows us to rename an object
+
+RENAME object_type object_name TO new_object_name;
+------------------------------------------------------------------------------
+
+	the TRUNCATE statement
+	instead of deleting an entire table through DROP,
+	we can also remove its data and continue to have the table as an object in db
+
+TRUNCATE object_type object_name
+TRUNCATE TABLE customers;  
+------------------------------------------------------------------------------
+
+SQL keywords = reserved words
+
+	ADD CREATE ALTER etc 	
+Keywords in SQL cannot be variable names
+	objects or databases cannot have names that coincide with SQL keywords
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+Data Manipulation Language (DML)
+	its statements allow us to manipulate the data in the tables of a database
+
+DML - 
+	SELECT... FROM...
+	INSERT INTO... VALUES
+	UPDATE... SET... WHERE
+	DELETE... FROM... WHERE
+
+
+	the SELECT statement
+	used to retrieve data from database objects, like tables
+
+SELECT * FROM sales;
+SELECT ... FROM sales;
+------------------------------------------------------------------------------
+
+	the INSERT statement
+	used to insert data into tables
+
+INSERT ... INTO ... VALUES ...;
+INSERT INTO sales(purchase_number, date_of_purchase) VALUES (1, '2021-07-22');
+INSERT INTO sales VALUES (1, '2021-07-22');
+INSERT INTO sales VALUES (2, '2021-07-22');
+-------------------------------------------------------------------------------
+
+	the UPDATE statement
+	allows you to renew existing data of your tables
+	this is based on the WHERE statement
+
+UPDATE sales
+SET date_of_purchase = '2021-07-21'
+WHERE purchase_number = 1;
+--------------------------------------------------------------------------------
+
+	the DELETE statement
+	functions similarly to the TRUNCATE statement
+	
+	TRUNCATE vs. DELETE
+	TRUNCATE allows us to remove all the record contained in a table
+				vs
+	with DELETE, you can specify precisely what you would like to be removed
+
+DELETE FROM sales;	==	TRUNCATE TABLE sales;
+	which will delete all the data in table
+
+DELETE FROM sales
+WHERE purchase_number = 1;
+	which will delete only one record which is with purchase_number = 1
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+Data Control Language (DCL)
+
+	the GRANT and REVOKE statements
+	allow us to manage the rights user have in a database
+
+
+	the GRANT statement
+	gives (or grants) certain permissions to users
+
+	one can grant a specific type of permission, like complete or partial access
+
+GRANT type_of_permission ON database_name.table_name TO
+'username'@'loaclhost'
+	these rights will be assigned to a person who has a username registered at local server
+
+	Big companies and corporation don't use this type of server, and their databases 
+	lay on external, more powerful servers
+-------------------------------------------------------------------------------------------------
+
+	To Create an user in the MySQL we give
+	
+CREATE USER 'frank'@'localhost' IDENTIFIED BY 'pass';
+	this line will create an user frank with the password of pass who can access data
+
+GRANT SELECT ON sales.customers to 'frank'@'localhost';
+
+	The above line will allow frank to select data from the table BUT
+	 will not allow him to perform any other action such as DROP TRUNCATE ALTER INSERT DELETE
+
+
+GRANT ALL ON Sales.* to 'frank'@'localhost';
+
+	The above line will allow frank to do all the operations as we have used *
+
+
+	Database administrators
+		- people who have complete rights to a database
+		- they can grant access to users and can revoke it
+
+	the REVOKE clause
+		- used to revoke the permission and privileges of database users
+		- the exact opposite of GRANT
+
+REVOKE type_of_permission ON database_name.table_name FROM 'username'@'localhost';
+
+REVOKE SELECT ON sales.customers FROM 'frank'@'localhost';
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+Transaction Control language
+
+	Transaction control Language (TCL)
+		- Not every changes you make to a database is saved automatically
+
+	the COMMIT statement
+		- related to INSERT, DELETE, UPDATE
+		- will save the changes you've made
+		- will let other user have access to the modified version of the database
+
+'''Imagine if we have changes some field using the update but to store the data to db we need'''
+
+UPDATE customers
+SET last_name = 'Johnson'
+WHERE customer_id = 4
+COMMIT;
+
+	the COMMIT statement 
+		- committed states can accrue
+		- saves the transaction in the database
+		- changes cannot be undone
+
+	the ROLLBACK clause
+	the clause that will let you make a step back
+		- allows you to undo any changes you have made but 
+			dont want to be saved permanently
+		- allows you to take a step back
+		- the last change(s) made will not count
+		- reverts to the last non-committed state
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
+
+Relational database
+	
+	Organize huge amount of data that can be quickly retrieved - Well structured - efficient
+
+THE SOLUTION IS TO HAVE RELATIONAL ALGEBRA
+
+	the smallest units in the entire system that can carry integral logical meaning
+
+	Relation Database Management System
+
+	Three steps that are needed is the Database design, Database creation, Database Manipulation
+
+	DATABASE DESIGN plot the entire database system on a canvas using a visualization tool
+
+	Relational Schema :
+		It is an table representation of data using the table name and column name
+		where the Primary key are underlined and the foreign key are given tag (FK)
+
+	
+	DATABASE CREATION use SQL to set up the database physically
+
+	DATABASE MANIPULATION allows you to use your dataset to extract business insights
+
+DBMS = database design + creation + manipulation
+
+-------------------------------------------------------------------------------------------
+
+Relational Schemas : Primary Key 
+	a column (or a set of columns) whise values exists and is unique
+	for every record in a table is called a primary key
+	
+	Normally tables have a tabular form
+	A relational Schema can be applied to represent them 
+
+	EACH VALUE MUST BE UNIQUE AND SHOULD NOT BE NULL
+
+	EACH TABLE CAN HAVE ONE AND ONLY ONE PRIMARY KEY
+	IN A TABLE, YOU CANNOT HAVE 3 OR 4 PRIMARY KEY
+
+Relating two table is done using the PRIMARY KEY and FOREIGN KEY option
+	this is not a compulsion to have both same names can be of different names
+
+
+Relational Schema : Foreign Key
+	
+	Always look for the foreign keys, as they show us where the relations are
+	An foreign key is a primary of its own table and should not repeat or NULL
+	
+	While the column is used as a foreign key it can be NULL and repeated
+	While the column is used as a foreign key it can contain number which are
+	not in the PRIMARY KEY in its own table 
+	
+	Identifies the relationships between tables, not the tables themselves
+
+Relational Schemas : Unique Key & Null Values
+
+	Used whenever you would like to specific that you dont want to see 
+	duplicate data in a given field (column)
+
+			Primary Key	|	unique Key
+			-----------------------------------
+	NULL VALUES		no	|	yes	
+	NO OF KEYS		1	|	0, 1, 2, ..
+			------------------------------------
+	Application
+	to multi-column		YES	|	YES
+
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+RELATIONSHIPS
+	
+	relationships tell you how much of the data from a foreign key
+	field can be seen in the primary key column of the table the data 
+	is related to and vice versa
+
+ONE to MANY type of relationship
+ONE TO ONE type of relationship	
+MANY to MANY type of relationship
+
+
+
+
+
+
+
+
+
+
+
