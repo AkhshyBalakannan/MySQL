@@ -538,6 +538,34 @@ mysql> SELECT owner, COUNT(*) FROM pet;
 
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
+VIEWS
+
+A view is nothing more than a SQL statement that is stored in the database with an associated name. 
+A view is actually a composition of a table in the form of a predefined SQL query. 
+Views, which are kind of virtual tables, allow users to do the following:
+
+A view can contain all rows of a table or select rows from a table. 
+A view can be created from one or many tables which depends on the written SQL query to create a view.
+Structure data in a way that users or classes of users find natural or intuitive.
+Restrict access to the data such that a user can see and (sometimes) modify 
+exactly what they need and no more.Summarize data from various tables which 
+can be used to generate reports.
+
+
+INDEXES
+
+While Indexes are special lookup tables that the database search engine can use to 
+speed up data retrieval. Simply put, an index is a pointer to data in a table. 
+An index in a database is very similar to an index in the back of a book.
+
+For example, if you want to reference all pages in a book that discuss a certain topic, 
+you first refer to the index, which lists all topics alphabetically and are then referred 
+to one or more specific page numbers.
+
+An index helps speed up SELECT queries and WHERE clauses, but it slows down data input, 
+with UPDATE and INSERT statements. Indexes can be created or dropped with no effect on the data.
+
+-------------------------------------------------------------------------------------
 
 CREATE INDEX
 
@@ -811,3 +839,259 @@ session obtains a READ lock and then another session requests a WRITE lock,
 subsequent READ lock requests wait until the session that requested the WRITE 
 lock has obtained the lock and released it. (An exception to this policy can 
 occur for small values of the max_write_lock_count system variable;
+
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+DATA TYPES:
+
+	These are data types present in MySQl:
+		Numeric Data Types
+		Date and Time Data Types
+		String Data Types
+		Spatial Data Types
+		The JSON Data Types	
+		
+Numeric Data Type:
+	INTERGER, INT, SMALLINT, TINYINT, MEDIUMINT, BIGINT, DECIMAL(M, D), FLOAT(M, D), DOUBLE(M, D)
+	BIT bitvalue
+
+	OUT-OF-RANGE and OVER-FLOW handling
+
+	INT - 11 width
+	TINYINT - 4 digits - 255
+	SMALLINT - 5 digits - 65535
+	MEDIUMINT - 9 digits - 16777215
+	BIGINT - 20 digits
+	FLOAT(M, D) - 10,2 default
+	DOUBLE(M, D) - 16,4 default
+	DECIMAL(M, D) -
+	DATE - YYYY-MM-DD
+	DATETIME - YYYY-MM-DD HH:MM:SS format
+	TIMESTAMP - YYYYMMDDHHMMSS
+	TIME - HH:MM:SS
+	YEAR(M)	2 digit and 4 digit format
+	CHAR(M) - 0-255
+	VARCHAR(M) - 1-255
+	BLOB or TEXT - Binary Large Objects are used to store binary data
+	ENUM - enumeration is a string object used to create a list of items
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+
+PREPARED STATEMENTS
+
+	This is for server side prepared statement where the variable are assigned
+	to take the advantage of the efficient cilent/server binary protocal
+
+	Protect against SQL injection attacks, The parameter values can contain unescaped
+	SQL quote and delimiter character
+
+	
+The following section provide an overview of the characteristics of prepared statements
+
+	Prepare Statement in Application Programs
+	Prepare Statement in SQL Scripts
+	PREPARE, EXECUTE, AND DEALLOCATE PREPARE Statements
+	SQL Syntax Permitted in Prepared statements
+
+Application programs:
+	You can use server-side prepared statements through client programming interface
+	including the MySQL C API Connector/J connector/NET API Prepared Statement Interface
+	mysqli extension available in PHP 5.0
+
+SQL Scripts:
+	You can use it when no programming interface is available to you 
+	You can use it from any program can send SQL statements to server to be executed
+	You can use it even if client is using old version
+
+
+PREPARE EXECUTE DEALLOCATE PREPARE Statement
+
+	PREPARE	- preparing a statement for execution
+	EXECUTE	- Executes a prepared statement
+	DEALLOCATE_PREPARE - Release a prepared statement
+
+ PREPARE stmt1 FROM 'SELECT SQRT(POW(?,2) + POW(?,2)) AS hypotenuse';
+ SET @a = 3;
+ SET @b = 4;
+ EXECUTE stmt1 USING @a, @b;
++------------+
+| hypotenuse |
++------------+
+|          5 |
++------------+
+ DEALLOCATE PREPARE stmt1;
+
+
+
+ SET @s = 'SELECT SQRT(POW(?,2) + POW(?,2)) AS hypotenuse';
+ PREPARE stmt2 FROM @s;
+ SET @a = 6;
+ SET @b = 8;
+ EXECUTE stmt2 USING @a, @b;
++------------+
+| hypotenuse |
++------------+
+|         10 |
++------------+
+ DEALLOCATE PREPARE stmt2;
+
+
+ USE test;
+ CREATE TABLE t1 (a INT NOT NULL);
+ INSERT INTO t1 VALUES (4), (8), (11), (32), (80);
+
+ SET @table = 't1';
+ SET @s = CONCAT('SELECT * FROM ', @table);
+
+ PREPARE stmt3 FROM @s;
+ EXECUTE stmt3;
++----+
+| a  |
++----+
+|  4 |
+|  8 |
+| 11 |
+| 32 |
+| 80 |
++----+
+
+ DEALLOCATE PREPARE stmt3;	
+
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
+TRANSACTIONS
+
+Why do we use transaction?
+
+	The primary benefit of using transactions is data integrity. 
+	Many database uses require storing data to multiple tables, 
+	or multiple rows to the same table in order to maintain a 
+	consistent data set. Using transactions ensures that other 
+	connections to the same database see either all the updates or 
+	none of them.
+
+BEGIN and BEGIN WORK are supported as aliases of START TRANSACTION for 
+initiating a transaction. START TRANSACTION is standard SQL syntax, is the 
+recommended way to start an ad-hoc transaction, and permits modifiers that BEGIN does not.
+
+
+START TRANSACTION;
+SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+UPDATE table2 SET summary=@A WHERE type=1;
+COMMIT;
+
+
+The AND CHAIN clause causes a new transaction to begin as soon as the current 
+one ends, and the new transaction has the same isolation level as the just-terminated 
+transaction. The new transaction also uses the same access mode (READ WRITE or READ ONLY) 
+as the just-terminated transaction. The RELEASE clause causes the server to disconnect 
+the current client session after terminating the current transaction. Including the NO 
+keyword suppresses CHAIN or RELEASE completion, which can be useful if the completion_type 
+system variable is set to cause chaining or release completion by default.
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
+UNION Clause;
+
+	SELECT ...
+	UNION [ALL | DISTINCT] SELECT ...
+	[UNION [ALL | DISTINCT] SELECT ...]
+
+Select the union to link both table using union
+
+We can use [ union all / union distinct ]
+
+SELECT 1, 2 UNION SELECT 'a', 'b';
++---+---+
+| 1 | 2 |
++---+---+
+| 1 | 2 |
+| a | b |
++---+---+
+
+
+ SELECT REPEAT('a',1) UNION SELECT REPEAT('b',20);
++----------------------+
+| REPEAT('a',1)        |
++----------------------+
+| a                    |
+| bbbbbbbbbbbbbbbbbbbb |
++----------------------+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+INTO CLAUSE
+
+SELECT * FROM (VALUES ROW(2,4,8)) AS t INTO @x,@y,@z;
+SELECT @x, @y, @z;
+SELECT * FROM (VALUES ROW(2,4,8)) AS t(a,b,c) INTO @x,@y,@z;
+SELECT @x,@y,@z;
+
+
+SELECT * FROM (VALUES ROW(1,2,3),ROW(4,5,6),ROW(7,8,9)) AS t
+INTO OUTFILE '/tmp/select-values.txt';
+
+
+In the trailing query block of a query expression, use of INTO before FROM produces 
+a warning. 
+
+Example:
+
+... UNION SELECT * INTO OUTFILE 'file_name' FROM table_name;
+
+In a parenthesized trailing block of a query expression, use of 
+INTO (regardless of its position relative to FROM) produces a warning. 
+
+Example:
+
+... UNION (SELECT * INTO OUTFILE 'file_name' FROM table_name);
+Those variants are deprecated because they are confusing, as if they 
+collect information from the named table rather than the entire query 
+expression (the UNION).
+
+UNION queries with an aggregate function in an ORDER BY clause are rejected 
+with an ER_AGGREGATE_ORDER_FOR_UNION error. 
+
+Example:
+
+SELECT 1 AS foo UNION SELECT 2 ORDER BY MAX(1);
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+WITH CLAUSES
+
+	A common table expression (CTE) is a named temporary result set that exists 
+within the scope of a single statement and that can be referred to later within that 
+statement, possibly multiple times. The following discussion describes how to write 
+statements that use CTEs.
+
+
+WITH
+  cte1 AS (SELECT a, b FROM table1),
+  cte2 AS (SELECT c, d FROM table2)
+SELECT b, d FROM cte1 JOIN cte2
+WHERE cte1.a = cte2.c;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

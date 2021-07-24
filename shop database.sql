@@ -209,35 +209,100 @@ SELECT *
 	-- This is nested subquerie as we have IN inside an IN
 
 -- LOCK AND UNLOCK TABLE STATEMENT
-CREATE DATABASE locking
+CREATE DATABASE locking;
 
-USE locking
+-- USE locking
 
-CREATE TABLE products (p1 VARCHAR(5) NOT NULL PRIMARY KEY, v2 VARCHAR(5) NOT NULL)
+CREATE TABLE products (p1 VARCHAR(5) NOT NULL PRIMARY KEY, v2 VARCHAR(5) NOT NULL);
 
-CREATE user 'user_b'@'localhost'
+CREATE user 'user_b'@'localhost';
 
-GRANT ALL ON locking. to 'user_b'@'localhost'
+GRANT ALL ON locking. TO 'user_b'@'localhost';
 
 -- READ --
-LOCK TABLE products READ
+LOCK TABLE products READ;
 
 -- WRITE --
-LOCK TABLE products WRITE
+LOCK TABLE products WRITE;
 
 -- UNLOCK --
 UNLOCK TABLE
 
 -- while in user_b we can 
 
-USE locking
+-- USE locking
 
 -- This cannot be done when write lock is kept on table product --
-INSERT INTO products VALUES ('PEN','PENCIL')
+INSERT INTO products VALUES ('PEN','PENCIL');
 
 -- This cannot be done when read lock is kept on table product --
-SELECT * FROM products   
+SELECT * FROM products;   
 
+
+-- UNION
+
+SELECT 1, 2;
+
+SELECT 1, 2 UNION SELECT 'a', 'b';
+
+CREATE DATABASE TRY_UNION;
+use try_union;
+CREATE TABLE t1 (x INT, y INT);
+INSERT INTO t1 VALUES ROW(4,-2),ROW(5,9);
+
+CREATE TABLE t2 (a INT, b INT);
+INSERT INTO t2 VALUES ROW(1,2),ROW(3,4);
+
+SELECT * FROM t1 UNION SELECT * FROM t2;
+TABLE t1 UNION SELECT * FROM t2;
+VALUES ROW(4,-2), ROW(5,9) UNION SELECT * FROM t2;
+SELECT * FROM t1 UNION TABLE t2;
+TABLE t1 UNION TABLE t2;
+VALUES ROW(4,-2), ROW(5,9) UNION TABLE t2;
+SELECT * FROM t1 UNION VALUES ROW(4,-2),ROW(5,9);
+TABLE t1 UNION VALUES ROW(4,-2),ROW(5,9);
+VALUES ROW(4,-2), ROW(5,9) UNION VALUES ROW(4,-2),ROW(5,9);
+
+(SELECT a FROM t1 WHERE a=10 AND B=1 ORDER BY a LIMIT 10)
+UNION
+(SELECT a FROM t2 WHERE a=11 AND B=2 ORDER BY a LIMIT 10);
+
+SELECT * INTO @myvar FROM t1 LIMIT 1;
+
+SELECT * FROM (VALUES ROW(2,4,8)) AS t INTO @x,@y,@z;
+SELECT @x, @y, @z;
+SELECT * FROM (VALUES ROW(2,4,8)) AS t(a,b,c) INTO @x,@y,@z;
+SELECT @x,@y,@z;
+
+
+
+
+-- SELECT * FROM (VALUES ROW(1,2,3),ROW(4,5,6),ROW(7,8,9)) AS t
+-- INTO OUTFILE '/tmp/select-values.txt';
+
+WITH cte (col1, col2) AS
+(
+  SELECT 1, 2
+  UNION ALL
+  SELECT 3, 4
+)
+SELECT col1, col2 FROM cte;
+
+WITH cte AS
+(
+  SELECT 1 AS col1, 2 AS col2
+  UNION ALL
+  SELECT 3, 4
+)
+SELECT col1, col2 FROM cte;
+
+-- CREATE TABLE t (c TINYINT UNSIGNED NOT NULL);
+SELECT * FROM t WHERE c << 256;
+-- SELECT * FROM t WHERE 1;
+
+SELECT * FROM t WHERE primary_key=1;
+SELECT * FROM t1,t2
+WHERE t1.primary_key=1 AND t2.primary_key=t1.id;
 
 
 
