@@ -1,15 +1,16 @@
 MySQL
 
+Type of programming we do in MySQL is Declarative and nonprocedural
+	Which means what is needed and which doesnot care about how to 
+
+Here everything is table where the data are stored in a table
+	Stored tabular
+
+
 InnoDB is a general-purpose storage engine that balances high reliability and high performance. 
 In MySQL 5.6, InnoDB is the default MySQL storage engine. Unless you have configured a different 
 default storage engine, issuing a CREATE TABLE statement without an ENGINE clause creates an InnoDB table.
 
-
-Type of programming we do in MySQL is Declarative and nonprocedural
-	Which means what is needed and not carry about how to 
-
-Here everything is table where the data are stored in a table
-	Stored tabular
 
 Each value are data value
 Each row are called as Record
@@ -30,286 +31,51 @@ Data Manipulation Language (DML)	manipulation of data
 Data Control Language (DCL)		assignment and removal of permission to use this data
 Transaction Control Language (TCL)	saving and restoring changes to a database
 
------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
-Data Definition Language (DDL):
+Installation:
 
-	SQL Syntax
-	comprises several types of statement that allow you to perform various commands and op
-
-	a syntax
-	a set of statements that allow the user to define or modify data structure and objects
-	such as tables
-
-DDL - CREATE, ALTER, DROP, RENAME, TRUNCATE.
-
-	the CREATE statement
-	used for creating entire databses and database object as tables
-
-CREATE object_type object_name;
-CREATE TABLE object_name (column_name data_type)
-CREATE TABLE sales (purchase_number INT);
-------------------------------------------------------------------------------
+	We need to install the setup from the oracle website and
+	install the setup after that it will open an installer window
+	which lets us to install the MySQL cilent and connector 
+NOTE: all the requirement software asked by the installer must be installed
 	
-	the ALTER statement
-	used when altering existing objects
-	- ADD
-	- REMOVE
-	- RENAME
+-------------------------------------------------------------------------------------------------------
+TRANSACTIONS
 
-ALTER TABLE sales
-ADD COLUMN date_of_purchase DATE;
-------------------------------------------------------------------------------
-	
-	the DROP statement
-	used when deleting the entire table
+Why do we use transaction?
 
-DROP TABLE customer;
-------------------------------------------------------------------------------
+	The primary benefit of using transactions is data integrity. 
+	Many database uses require storing data to multiple tables, 
+	or multiple rows to the same table in order to maintain a 
+	consistent data set. Using transactions ensures that other 
+	connections to the same database see either all the updates or 
+	none of them.
 
-	the RENAME statement
-	allows us to rename an object
-
-RENAME object_type object_name TO new_object_name;
-------------------------------------------------------------------------------
-
-	the TRUNCATE statement
-	instead of deleting an entire table through DROP,
-	we can also remove its data and continue to have the table as an object in db
-
-TRUNCATE object_type object_name
-TRUNCATE TABLE customers;  
-------------------------------------------------------------------------------
-
-SQL keywords = reserved words
-
-	ADD CREATE ALTER etc 	
-Keywords in SQL cannot be variable names
-	objects or databases cannot have names that coincide with SQL keywords
------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------
-
-Data Manipulation Language (DML)
-	its statements allow us to manipulate the data in the tables of a database
-
-DML - 
-	SELECT... FROM...
-	INSERT INTO... VALUES
-	UPDATE... SET... WHERE
-	DELETE... FROM... WHERE
+BEGIN and BEGIN WORK are supported as aliases of START TRANSACTION for 
+initiating a transaction. START TRANSACTION is standard SQL syntax, is the 
+recommended way to start an ad-hoc transaction, and permits modifiers that BEGIN does not.
 
 
-	the SELECT statement
-	used to retrieve data from database objects, like tables
-
-SELECT * FROM sales;
-SELECT ... FROM sales;
-------------------------------------------------------------------------------
-
-	the INSERT statement
-	used to insert data into tables
-
-INSERT ... INTO ... VALUES ...;
-INSERT INTO sales(purchase_number, date_of_purchase) VALUES (1, '2021-07-22');
-INSERT INTO sales VALUES (1, '2021-07-22');
-INSERT INTO sales VALUES (2, '2021-07-22');
--------------------------------------------------------------------------------
-
-	the UPDATE statement
-	allows you to renew existing data of your tables
-	this is based on the WHERE statement
-
-UPDATE sales
-SET date_of_purchase = '2021-07-21'
-WHERE purchase_number = 1;
---------------------------------------------------------------------------------
-
-	the DELETE statement
-	functions similarly to the TRUNCATE statement
-	
-	TRUNCATE vs. DELETE
-	TRUNCATE allows us to remove all the record contained in a table
-	Truncation operations cannot be performed if the session holds an active table lock.
-				vs
-	with DELETE, you can specify precisely what you would like to be removed
-
-DELETE FROM sales;	==	TRUNCATE TABLE sales;
-	which will delete all the data in table
-
-DELETE FROM sales
-WHERE purchase_number = 1;
-	which will delete only one record which is with purchase_number = 1
-
-----------------------------------------------------------------------------
-----------------------------------------------------------------------------
-
-Data Control Language (DCL)
-
-	the GRANT and REVOKE statements
-	allow us to manage the rights user have in a database
-
-
-	the GRANT statement
-	gives (or grants) certain permissions to users
-
-	one can grant a specific type of permission, like complete or partial access
-
-GRANT type_of_permission ON database_name.table_name TO
-'username'@'loaclhost'
-	these rights will be assigned to a person who has a username registered at local server
-
-	Big companies and corporation don't use this type of server, and their databases 
-	lay on external, more powerful servers
--------------------------------------------------------------------------------------------------
-
-	To Create an user in the MySQL we give
-	
-CREATE USER 'frank'@'localhost' IDENTIFIED BY 'pass';
-	this line will create an user frank with the password of pass who can access data
-
-GRANT SELECT ON sales.customers to 'frank'@'localhost';
-
-	The above line will allow frank to select data from the table BUT
-	 will not allow him to perform any other action such as DROP TRUNCATE ALTER INSERT DELETE
-
-
-GRANT ALL ON Sales.* to 'frank'@'localhost';
-
-	The above line will allow frank to do all the operations as we have used *
-
-
-	Database administrators
-		- people who have complete rights to a database
-		- they can grant access to users and can revoke it
-
-	the REVOKE clause
-		- used to revoke the permission and privileges of database users
-		- the exact opposite of GRANT
-
-REVOKE type_of_permission ON database_name.table_name FROM 'username'@'localhost';
-
-REVOKE SELECT ON sales.customers FROM 'frank'@'localhost';
-
----------------------------------------------------------------------
----------------------------------------------------------------------
-
-Transaction Control language
-
-	Transaction control Language (TCL)
-		- Not every changes you make to a database is saved automatically
-
-	the COMMIT statement
-		- related to INSERT, DELETE, UPDATE
-		- will save the changes you've made
-		- will let other user have access to the modified version of the database
-
-'''Imagine if we have changes some field using the update but to store the data to db we need'''
-
-UPDATE customers
-SET last_name = 'Johnson'
-WHERE customer_id = 4
+START TRANSACTION;
+SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+UPDATE table2 SET summary=@A WHERE type=1;
 COMMIT;
 
-	the COMMIT statement 
-		- committed states can accrue
-		- saves the transaction in the database
-		- changes cannot be undone
 
-	the ROLLBACK clause
-	the clause that will let you make a step back
-		- allows you to undo any changes you have made but 
-			dont want to be saved permanently
-		- allows you to take a step back
-		- the last change(s) made will not count
-		- reverts to the last non-committed state
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
+The AND CHAIN clause causes a new transaction to begin as soon as the current 
+one ends, and the new transaction has the same isolation level as the just-terminated 
+transaction. The new transaction also uses the same access mode (READ WRITE or READ ONLY) 
+as the just-terminated transaction. The RELEASE clause causes the server to disconnect 
+the current client session after terminating the current transaction. Including the NO 
+keyword suppresses CHAIN or RELEASE completion, which can be useful if the completion_type 
+system variable is set to cause chaining or release completion by default.
 
+-------------------------------------------------------------------------------------------------------
+BASICS:
 
-Relational database
+Here the basics are explained in the detailed explanation of DML DDL TCL topics,
 	
-	Organize huge amount of data that can be quickly retrieved - Well structured - efficient
-
-THE SOLUTION IS TO HAVE RELATIONAL ALGEBRA
-
-	the smallest units in the entire system that can carry integral logical meaning
-
-	Relation Database Management System
-
-	Three steps that are needed is the Database design, Database creation, Database Manipulation
-
-	DATABASE DESIGN plot the entire database system on a canvas using a visualization tool
-
-	Relational Schema :
-		It is an table representation of data using the table name and column name
-		where the Primary key are underlined and the foreign key are given tag (FK)
-
-	
-	DATABASE CREATION use SQL to set up the database physically
-
-	DATABASE MANIPULATION allows you to use your dataset to extract business insights
-
-DBMS = database design + creation + manipulation
-
--------------------------------------------------------------------------------------------
-
-Relational Schemas : Primary Key 
-	a column (or a set of columns) whise values exists and is unique
-	for every record in a table is called a primary key
-	
-	Normally tables have a tabular form
-	A relational Schema can be applied to represent them 
-
-	EACH VALUE MUST BE UNIQUE AND SHOULD NOT BE NULL
-
-	EACH TABLE CAN HAVE ONE AND ONLY ONE PRIMARY KEY
-	IN A TABLE, YOU CANNOT HAVE 3 OR 4 PRIMARY KEY
-
-Relating two table is done using the PRIMARY KEY and FOREIGN KEY option
-	this is not a compulsion to have both same names can be of different names
-
-
-Relational Schema : Foreign Key
-	
-	Always look for the foreign keys, as they show us where the relations are
-	An foreign key is a primary of its own table and should not repeat or NULL
-	
-	While the column is used as a foreign key it can be NULL and repeated
-	While the column is used as a foreign key it can contain number which are
-	not in the PRIMARY KEY in its own table 
-	
-	Identifies the relationships between tables, not the tables themselves
-
-Relational Schemas : Unique Key & Null Values
-
-	Used whenever you would like to specific that you dont want to see 
-	duplicate data in a given field (column)
-
-			Primary Key	|	unique Key
-			-----------------------------------
-	NULL VALUES		no	|	yes	
-	NO OF KEYS		1	|	0, 1, 2, ..
-			------------------------------------
-	Application
-	to multi-column		YES	|	YES
-
-
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-
-RELATIONSHIPS
-	
-	relationships tell you how much of the data from a foreign key
-	field can be seen in the primary key column of the table the data 
-	is related to and vice versa
-
-ONE to MANY type of relationship
-ONE TO ONE type of relationship	
-MANY to MANY type of relationship
-
--------------------------------------------------------------------------------------
-
 STEP BY STEP CONCEPTS
 
 1. Selecting all data 
@@ -531,41 +297,98 @@ mysql> SELECT owner, COUNT(*) FROM pet;
 +--------+----------+
 1 row in set (0.00 sec)
 
- 
-10. --
+------------------------------------------------------------------------------------------------------------
 
+DATA TYPES:
 
+	These are data types present in MySQl:
+		Numeric Data Types
+		Date and Time Data Types
+		String Data Types
+		Spatial Data Types
+		The JSON Data Types	
+		
+Numeric Data Type:
+	INTERGER, INT, SMALLINT, TINYINT, MEDIUMINT, BIGINT, DECIMAL(M, D), FLOAT(M, D), DOUBLE(M, D)
+	BIT bitvalue
 
-------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------
-VIEWS
+	OUT-OF-RANGE and OVER-FLOW handling
 
-A view is nothing more than a SQL statement that is stored in the database with an associated name. 
-A view is actually a composition of a table in the form of a predefined SQL query. 
-Views, which are kind of virtual tables, allow users to do the following:
+	INT - 11 width
+	TINYINT - 4 digits - 255
+	SMALLINT - 5 digits - 65535
+	MEDIUMINT - 9 digits - 16777215
+	BIGINT - 20 digits
+	FLOAT(M, D) - 10,2 default
+	DOUBLE(M, D) - 16,4 default
+	DECIMAL(M, D) -
+	DATE - YYYY-MM-DD
+	DATETIME - YYYY-MM-DD HH:MM:SS format
+	TIMESTAMP - YYYYMMDDHHMMSS
+	TIME - HH:MM:SS
+	YEAR(M)	2 digit and 4 digit format
+	CHAR(M) - 0-255
+	VARCHAR(M) - 1-255
+	BLOB or TEXT - Binary Large Objects are used to store binary data
+	ENUM - enumeration is a string object used to create a list of items
 
-A view can contain all rows of a table or select rows from a table. 
-A view can be created from one or many tables which depends on the written SQL query to create a view.
-Structure data in a way that users or classes of users find natural or intuitive.
-Restrict access to the data such that a user can see and (sometimes) modify 
-exactly what they need and no more.Summarize data from various tables which 
-can be used to generate reports.
+------------------------------------------------------------------------------------------------------
 
+DATA DEFINITION LANGUAGE (DDL)
 
-INDEXES
+	SQL Syntax
+	comprises several types of statement that allow you to perform various commands and op
 
-While Indexes are special lookup tables that the database search engine can use to 
-speed up data retrieval. Simply put, an index is a pointer to data in a table. 
-An index in a database is very similar to an index in the back of a book.
+	a syntax
+	a set of statements that allow the user to define or modify data structure and objects
+	such as tables
 
-For example, if you want to reference all pages in a book that discuss a certain topic, 
-you first refer to the index, which lists all topics alphabetically and are then referred 
-to one or more specific page numbers.
+DDL - CREATE, ALTER, DROP, RENAME, TRUNCATE.
 
-An index helps speed up SELECT queries and WHERE clauses, but it slows down data input, 
-with UPDATE and INSERT statements. Indexes can be created or dropped with no effect on the data.
+	the CREATE statement
+	used for creating entire databses and database object as tables
 
--------------------------------------------------------------------------------------
+CREATE object_type object_name;
+CREATE TABLE object_name (column_name data_type)
+CREATE TABLE sales (purchase_number INT);
+------------------------------------------------------------------------------
+	
+	the ALTER statement
+	used when altering existing objects
+	- ADD
+	- REMOVE
+	- RENAME
+
+ALTER TABLE sales
+ADD COLUMN date_of_purchase DATE;
+------------------------------------------------------------------------------
+	
+	the DROP statement
+	used when deleting the entire table
+
+DROP TABLE customer;
+------------------------------------------------------------------------------
+
+	the RENAME statement
+	allows us to rename an object
+
+RENAME object_type object_name TO new_object_name;
+------------------------------------------------------------------------------
+
+	the TRUNCATE statement
+	instead of deleting an entire table through DROP,
+	we can also remove its data and continue to have the table as an object in db
+
+TRUNCATE object_type object_name
+TRUNCATE TABLE customers;  
+------------------------------------------------------------------------------
+
+SQL keywords = reserved words
+
+	ADD CREATE ALTER etc 	
+Keywords in SQL cannot be variable names
+	objects or databases cannot have names that coincide with SQL keywords
+-----------------------------------------------------------------------------------------
 
 CREATE INDEX
 
@@ -709,8 +532,6 @@ CRAETE VIEWS
 	-- SubQueries
 
 -------------------------------------------------
-m
-m_id m t ge
 
 CREATE VIEW scifi AS 
 SELECT m.movie_id, m.movie_title, g.genre_title
@@ -728,10 +549,92 @@ NOTE : The main thing is if we update the value in views which will also change
 
 
 ------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
-data Manipulation Language (DML);
+VIEWS
+
+A view is nothing more than a SQL statement that is stored in the database with an associated name. 
+A view is actually a composition of a table in the form of a predefined SQL query. 
+Views, which are kind of virtual tables, allow users to do the following:
+
+A view can contain all rows of a table or select rows from a table. 
+A view can be created from one or many tables which depends on the written SQL query to create a view.
+Structure data in a way that users or classes of users find natural or intuitive.
+Restrict access to the data such that a user can see and (sometimes) modify 
+exactly what they need and no more.Summarize data from various tables which 
+can be used to generate reports.
+
+
+INDEXES
+
+While Indexes are special lookup tables that the database search engine can use to 
+speed up data retrieval. Simply put, an index is a pointer to data in a table. 
+An index in a database is very similar to an index in the back of a book.
+
+For example, if you want to reference all pages in a book that discuss a certain topic, 
+you first refer to the index, which lists all topics alphabetically and are then referred 
+to one or more specific page numbers.
+
+An index helps speed up SELECT queries and WHERE clauses, but it slows down data input, 
+with UPDATE and INSERT statements. Indexes can be created or dropped with no effect on the data.
+
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+
+DATA MANIPULATION LANGUAGE (DML)
+
+	its statements allow us to manipulate the data in the tables of a database
+
+DML - 
+	SELECT... FROM...
+	INSERT INTO... VALUES
+	UPDATE... SET... WHERE
+	DELETE... FROM... WHERE
+
+
+	the SELECT statement
+	used to retrieve data from database objects, like tables
+
+SELECT * FROM sales;
+SELECT ... FROM sales;
+------------------------------------------------------------------------------
+
+	the INSERT statement
+	used to insert data into tables
+
+INSERT ... INTO ... VALUES ...;
+INSERT INTO sales(purchase_number, date_of_purchase) VALUES (1, '2021-07-22');
+INSERT INTO sales VALUES (1, '2021-07-22');
+INSERT INTO sales VALUES (2, '2021-07-22');
+-------------------------------------------------------------------------------
+
+	the UPDATE statement
+	allows you to renew existing data of your tables
+	this is based on the WHERE statement
+
+UPDATE sales
+SET date_of_purchase = '2021-07-21'
+WHERE purchase_number = 1;
+--------------------------------------------------------------------------------
+
+	the DELETE statement
+	functions similarly to the TRUNCATE statement
 	
+	TRUNCATE vs. DELETE
+	TRUNCATE allows us to remove all the record contained in a table
+	Truncation operations cannot be performed if the session holds an active table lock.
+				vs
+	with DELETE, you can specify precisely what you would like to be removed
+
+DELETE FROM sales;	==	TRUNCATE TABLE sales;
+	which will delete all the data in table
+
+DELETE FROM sales
+WHERE purchase_number = 1;
+	which will delete only one record which is with purchase_number = 1
+
+----------------------------------------------------------------------------
+
 SUBQUERIES
 	These are simply nested SQL which we write to get more specific data
 	as a part of the filter query that is where line query
@@ -767,9 +670,39 @@ SUBQUERIES
 	-- This is nested subquerie as we have IN inside an IN
 
 -----------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------
 
-SQL Statements
+SQL STATEMENTS:
+
+Transaction Control language
+
+	Transaction control Language (TCL)
+		- Not every changes you make to a database is saved automatically
+
+	the COMMIT statement
+		- related to INSERT, DELETE, UPDATE
+		- will save the changes you've made
+		- will let other user have access to the modified version of the database
+
+'''Imagine if we have changes some field using the update but to store the data to db we need'''
+
+UPDATE customers
+SET last_name = 'Johnson'
+WHERE customer_id = 4
+COMMIT;
+
+	the COMMIT statement 
+		- committed states can accrue
+		- saves the transaction in the database
+		- changes cannot be undone
+
+	the ROLLBACK clause
+	the clause that will let you make a step back
+		- allows you to undo any changes you have made but 
+			dont want to be saved permanently
+		- allows you to take a step back
+		- the last change(s) made will not count
+		- reverts to the last non-committed state
+----------------------------------------------------------------------------------------
 
 LOCK AND UNLOCK TABLE STATEMENT
 
@@ -840,45 +773,7 @@ subsequent READ lock requests wait until the session that requested the WRITE
 lock has obtained the lock and released it. (An exception to this policy can 
 occur for small values of the max_write_lock_count system variable;
 
-
-------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------
-
-DATA TYPES:
-
-	These are data types present in MySQl:
-		Numeric Data Types
-		Date and Time Data Types
-		String Data Types
-		Spatial Data Types
-		The JSON Data Types	
-		
-Numeric Data Type:
-	INTERGER, INT, SMALLINT, TINYINT, MEDIUMINT, BIGINT, DECIMAL(M, D), FLOAT(M, D), DOUBLE(M, D)
-	BIT bitvalue
-
-	OUT-OF-RANGE and OVER-FLOW handling
-
-	INT - 11 width
-	TINYINT - 4 digits - 255
-	SMALLINT - 5 digits - 65535
-	MEDIUMINT - 9 digits - 16777215
-	BIGINT - 20 digits
-	FLOAT(M, D) - 10,2 default
-	DOUBLE(M, D) - 16,4 default
-	DECIMAL(M, D) -
-	DATE - YYYY-MM-DD
-	DATETIME - YYYY-MM-DD HH:MM:SS format
-	TIMESTAMP - YYYYMMDDHHMMSS
-	TIME - HH:MM:SS
-	YEAR(M)	2 digit and 4 digit format
-	CHAR(M) - 0-255
-	VARCHAR(M) - 1-255
-	BLOB or TEXT - Binary Large Objects are used to store binary data
-	ENUM - enumeration is a string object used to create a list of items
-
--------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 
 PREPARED STATEMENTS
 
@@ -960,44 +855,93 @@ PREPARE EXECUTE DEALLOCATE PREPARE Statement
 
  DEALLOCATE PREPARE stmt3;	
 
-
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-
-TRANSACTIONS
-
-Why do we use transaction?
-
-	The primary benefit of using transactions is data integrity. 
-	Many database uses require storing data to multiple tables, 
-	or multiple rows to the same table in order to maintain a 
-	consistent data set. Using transactions ensures that other 
-	connections to the same database see either all the updates or 
-	none of them.
-
-BEGIN and BEGIN WORK are supported as aliases of START TRANSACTION for 
-initiating a transaction. START TRANSACTION is standard SQL syntax, is the 
-recommended way to start an ad-hoc transaction, and permits modifiers that BEGIN does not.
-
-
-START TRANSACTION;
-SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
-UPDATE table2 SET summary=@A WHERE type=1;
-COMMIT;
-
-
-The AND CHAIN clause causes a new transaction to begin as soon as the current 
-one ends, and the new transaction has the same isolation level as the just-terminated 
-transaction. The new transaction also uses the same access mode (READ WRITE or READ ONLY) 
-as the just-terminated transaction. The RELEASE clause causes the server to disconnect 
-the current client session after terminating the current transaction. Including the NO 
-keyword suppresses CHAIN or RELEASE completion, which can be useful if the completion_type 
-system variable is set to cause chaining or release completion by default.
-
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
-UNION Clause;
+Aggregate Function:
+
+	These are the mathematic functions used in 
+	-- AVG,MIN,MAX,SUM,COUNT --
+
+They are often used with a GROUP BY clause to group values into subsets.
+If you use an aggregate function in a statement containing no GROUP BY clause, it is equivalent to grouping on all rows.
+For numeric arguments, the variance and standard deviation functions return a DOUBLE value. The SUM() and AVG() functions return a DECIMAL value for exact-value arguments (integer or DECIMAL), and a DOUBLE value for approximate-value arguments (FLOAT or DOUBLE).
+
+The SUM() and AVG() aggregate functions do not work with temporal values. (They convert the values to numbers, losing everything after the first nonnumeric character.) To work around this problem, convert to numeric units, perform the aggregate operation, and convert back to a temporal value
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+KeyWords and Reserved Words
+	
+	
+
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+CLAUSES:
+
+JOIN Clause:
+	The maximum number of tables that can be referenced in a single join is 61. This includes a join handled by merging derived tables and views in the FROM clause into the outer query block	
+	INNER JOIN and , (comma) are semantically equivalent in the absence of a join condition: both produce a Cartesian product between the specified tables (that is, each and every row in the first table is joined to each and every row in the second table).
+	If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, a row with all columns set to NULL is used for the right table. You can use this fact to find rows in a table that have no counterpart in another table
+	The USING(join_column_list) clause names a list of columns that must exist in both tables. If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
+
+In MySQL, JOIN, CROSS JOIN, and INNER JOIN are syntactic equivalents (they can replace each other). In standard SQL, they are not equivalent. INNER JOIN is used with an ON clause, CROSS JOIN is used otherwise.
+
+SELECT t1.name, t2.salary
+  FROM employee AS t1 INNER JOIN info AS t2 ON t1.name = t2.name;
+
+SELECT t1.name, t2.salary
+  FROM employee t1 INNER JOIN info t2 ON t1.name = t2.name;
+
+This is done to name the table itself 
+
+SELECT * FROM (SELECT 1, 2, 3) AS t1;
+
+
+If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, a row with all columns set to NULL is used for the right table. You can use this fact to find rows in a table that have no counterpart in another table:
+
+
+SELECT left_tbl.*
+  FROM left_tbl LEFT JOIN right_tbl ON left_tbl.id = right_tbl.id
+  WHERE right_tbl.id IS NULL;
+
+The USING(join_column_list) clause names a list of columns that must exist in both tables. If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
+
+
+a LEFT JOIN b USING (c1, c2, c3)
+
+SELECT * FROM table1, table2;
+
+SELECT * FROM table1 INNER JOIN table2 ON table1.id = table2.id;
+
+SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id;
+
+SELECT * FROM table1 LEFT JOIN table2 USING (id);
+
+SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id
+  LEFT JOIN table3 ON table2.id = table3.id;
+
+
+SELECT * FROM t1 JOIN t2 JOIN t3 ON (i1 = i3);
+
+
+JOIN has higher precedence than the comma operator (,), so the join expression t1, t2 JOIN t3 is interpreted as (t1, (t2 JOIN t3)), not as ((t1, t2) JOIN t3). This affects statements that use an ON clause because that clause can refer only to columns in the operands of the join, and the precedence affects interpretation of what those operands are.
+
+
+CREATE TABLE t1 (i1 INT, j1 INT);
+CREATE TABLE t2 (i2 INT, j2 INT);
+CREATE TABLE t3 (i3 INT, j3 INT);
+INSERT INTO t1 VALUES(1, 1);
+INSERT INTO t2 VALUES(1, 1);
+INSERT INTO t3 VALUES(1, 1);
+SELECT * FROM t1, t2 JOIN t3 ON (t1.i1 = t3.i3);
+
+--------------------------------------------------------------------------------------------------
+
+UNION Clause:
 
 	SELECT ...
 	UNION [ALL | DISTINCT] SELECT ...
@@ -1026,6 +970,7 @@ SELECT 1, 2 UNION SELECT 'a', 'b';
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
+
 INTO CLAUSE
 
 SELECT * FROM (VALUES ROW(2,4,8)) AS t INTO @x,@y,@z;
@@ -1064,13 +1009,28 @@ SELECT 1 AS foo UNION SELECT 2 ORDER BY MAX(1);
 
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
+
 WITH CLAUSES
 
 	A common table expression (CTE) is a named temporary result set that exists 
 within the scope of a single statement and that can be referred to later within that 
-statement, possibly multiple times. The following discussion describes how to write 
-statements that use CTEs.
+statement, possibly multiple times. 
 
+NOTE:   Only one WITH clause is permitted at the same level.
+	A WITH clause can define one or more common table expressions, but each CTE name must be unique to the clause.	
+
+CTE can refer to itself or to other CTEs:
+
+A self-referencing CTE is recursive.
+
+A CTE can refer to CTEs defined earlier in the same WITH clause, but not those defined later.
+
+This constraint rules out mutually-recursive CTEs, where cte1 references cte2 and cte2 references cte1. One of those references must be to a CTE defined later, which is not permitted.
+
+A CTE in a given query block can refer to CTEs defined in query blocks at a more outer level, but not CTEs defined in query blocks at a more inner level.
+
+Common Table Expressions
+To specify common table expressions, use a WITH clause that has one or more comma-separated subclauses. Each subclause provides a subquery that produces a result set, and associates a name with the subquery. The following example defines CTEs named cte1 and cte2 in the WITH clause, and refers to them in the top-level SELECT that follows the WITH clause:
 
 WITH
   cte1 AS (SELECT a, b FROM table1),
@@ -1078,20 +1038,641 @@ WITH
 SELECT b, d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 
+A WITH clause is permitted in these contexts:
+
+At the beginning of SELECT, UPDATE, and DELETE statements.
+
+
+WITH ... SELECT ...
+WITH ... UPDATE ...
+WITH ... DELETE ...
+
+Recursive Common Table Expressions
+A recursive common table expression is one having a subquery that refers to its own name. For example:
+
+WITH RECURSIVE cte (n) AS
+(
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM cte WHERE n < 5
+)
+SELECT * FROM cte;
+When executed, the statement produces this result, a single column containing a simple linear sequence:
+
++------+
+| n    |
++------+
+|    1 |
+|    2 |
+|    3 |
+|    4 |
+|    5 |
++------+
+A recursive CTE has this structure:
+
+The WITH clause must begin with WITH RECURSIVE if any CTE in the WITH clause refers to itself. (If no CTE refers to itself, RECURSIVE is permitted but not required.)
+
+If you forget RECURSIVE for a recursive CTE, this error is a likely result:
+
+ERROR 1146 (42S02): Table 'cte_name' doesn't exist
+
+
+The recursive SELECT part must not contain these constructs:
+
+Aggregate functions such as SUM()
+
+Window functions
+
+GROUP BY
+
+ORDER BY
+
+DISTINCT
+
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+WHERE
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Keys and Constraints:
+
+Foreign Key:
+	
+MySQL supports foreign keys, which permit cross-referencing related data across tables, and foreign key constraints, which help keep the related data consistent.
+
+Simply a foreign key is used to tell MySQL and To refer another table from one
+the syntax for is is column_name INT, FOREIGN KEY (column_name) REFERENCES table_name(column_name)
+
+We need to set the update and delete options 
+	SET FOREIGN_KEY_CHECKS=0; -- to disable them
+	SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
+
+We also have the extra value that has to be given those are 
+	ON DELETE CASCADE	||	ON UPDATE CASCADE
+
+We also have multiple other options to set the child table value 
+	when the parent table are deleted like NULL NO ACTIONS SET DEFAULT
+
+
+---------------------------------------------------------------------------------------
+
+Primary Key Optimization
+
+The primary key for a table represents the column or set of columns that 
+you use in your most vital queries. It has an associated index, for fast 
+query performance. Query performance benefits from the NOT NULL optimization, 
+because it cannot include any NULL values. With the InnoDB storage engine, 
+the table data is physically organized to do ultra-fast lookups and sorts 
+based on the primary key column or columns.
+
+----------------------------------------------------------------------------------------
+
+
+MySQL Primary Key:
+
+MySQL PRIMARY KEY examples
+The PRIMARY KEY constraint allows you to define a primary key of a table when you create or alter table.
+
+1) Define a PRIMARY KEY constraint in CREATE TABLE
+Typically, you define the primary key for a table in the CREATE TABLE statement.
+
+If the primary key has one column, you can use the PRIMARY KEY constraint as a column constraint:
+
+CREATE TABLE table_name(
+    primary_key_column datatype PRIMARY KEY,
+    ...
+);
+Code language: SQL (Structured Query Language) (sql)
+When the primary key has more than one column, you must use the PRIMARY KEY constraint as a table constraint.
+
+CREATE TABLE table_name(
+    primary_key_column1 datatype,
+    primary_key_column2 datatype,
+    ...,
+    PRIMARY KEY(column_list)
+);
+
+2) Define PRIMARY KEY constraints using ALTER TABLE
+If a table, for some reasons, does not have a primary key, you can use the ALTER TABLEstatement to add a primary key to the table as follows:
+
+ALTER TABLE table_name
+ADD PRIMARY KEY(column_list);
+Code language: SQL (Structured Query Language) (sql)
+The following example adds the id column to the primary key.
+
+First, create the pkdemos table without a primary key.
+
+CREATE TABLE pkdemos(
+   id INT,
+   title VARCHAR(255) NOT NULL
+);
+Code language: SQL (Structured Query Language) (sql)
+Second, add a primary key to the pkdemos table using the ALTER TABLE statement:
+
+ALTER TABLE pkdemos
+ADD PRIMARY KEY(id);
+Code language: SQL (Structured Query Language) (sql)
+If you add a primary key to a table that already has data. The data in the column(s), which will be included in the primary key, must be unique and not NULL.
+
+Suppose that email and username of users in the users table must be unique. To enforce thes rules, you can define UNIQUE indexes for the email and username columns as the following  statement:
+
+Add a UNIQUE index for the username column:
+
+ALTER TABLE users
+ADD UNIQUE INDEX username_unique (username ASC) ;
+Code language: SQL (Structured Query Language) (sql)
+Add a UNIQUE index for the email column:
+
+ALTER TABLE users
+ADD UNIQUE INDEX  email_unique (email ASC) ;
+Code language: SQL (Structured Query Language) (sql)
+
+----------------------------------------------------------------------------------------
+
+MySQL UNIQUE Constraint
+
+If you define a UNIQUE constraint without specifying a name, MySQL automatically generates a name for it. 
+
+A UNIQUE constraint is an integrity constraint that ensures values in a column or group of columns to be unique.  A UNIQUE constraint can be either a column constraint or a table constraint.
+
+To define a UNIQUE constraint for a column when you create a table, you use this syntax:
+
+CREATE TABLE table_name(
+    ...,
+    column_name data_type UNIQUE,
+    ...
+);
+
+To define a UNIQUE  constraint for two or more columns, you use the following syntax:
+
+CREATE TABLE table_name(
+   ...
+   column_name1 column_definition,
+   column_name2 column_definition,
+   ...,
+   UNIQUE(column_name1,column_name2)
+);
+
+MySQL issued an error:
+
+Error Code: 1062. Duplicate entry '(408)-908-2476' for key 'phone'
+
+To Drop the column we can simply give
+
+Drop a unique constraint
+To drop a UNIQUE constraint, you use can use DROP INDEX or ALTER TABLE statement:
+
+DROP INDEX index_name ON table_name;
+
+-----------------------------------------------------------------------------------------
+
+Storage Engine and Its types:
+
+
+Storage engines are MySQL components that handle the SQL operations for different table types. InnoDB is the default and most general-purpose storage engine, and Oracle recommends using it for tables except for specialized use cases. (The CREATE TABLE statement in MySQL 8.0 creates InnoDB tables by default.)
+
+MySQL Server uses a pluggable storage engine architecture that enables storage engines to be loaded into and unloaded from a running MySQL server.
+
+To determine which storage engines your server supports, use the SHOW ENGINES statement. The value in the Support column indicates whether an engine can be used. A value of YES, NO, or DEFAULT indicates that an engine is available, not available, or available and currently set as the default storage engine.
+
+mysql> SHOW ENGINES\G
+*************************** 1. row ***************************
+      Engine: PERFORMANCE_SCHEMA
+     Support: YES
+     Comment: Performance Schema
+Transactions: NO
+          XA: NO
+  Savepoints: NO
+*************************** 2. row ***************************
+      Engine: InnoDB
+     Support: DEFAULT
+     Comment: Supports transactions, row-level locking, and foreign keys
+Transactions: YES
+          XA: YES
+  Savepoints: YES
+*************************** 3. row ***************************
+      Engine: MRG_MYISAM
+     Support: YES
+     Comment: Collection of identical MyISAM tables
+Transactions: NO
+          XA: NO
+  Savepoints: NO
+*************************** 4. row ***************************
+      Engine: BLACKHOLE
+     Support: YES
+     Comment: /dev/null storage engine (anything you write to it disappears)
+Transactions: NO
+          XA: NO
+  Savepoints: NO
+*************************** 5. row ***************************
+      Engine: MyISAM
+     Support: YES
+     Comment: MyISAM storage engine
+Transactions: NO
+          XA: NO
+  Savepoints: NO
+
+-----------------------------------------------------------------------------------------
+
+InnoDB 
+
+InnoDb is general-purpose storage engine that balances high reliability and high performance. 
+In MySQL8.0, InnoDB is the default MySQL storage engine, Unless you have configured a different default
+storage engine, issing a create table statement without an ENGINE clause creates an InnoDB table
+
+Key Advantages of InnoDB
+
+	Its DML operations follow the ACID model, with transactions featuring commit, rollback, and 
+	crash-recovery capabilities to protect user data.
+
+	Atomicity, Consistency, Isolation, and Durability - ACID
+	
+	Row-level locking and Oracle-style consistent reads increase multi-user concurrency and performance.
+
+	InnoDB tables arrange your data on disk to optimize queries based on primary keys. Each InnoDB table has a primary key index called the clustered index that organizes the data to minimize I/O for primary key lookups.
+
+	To maintain data integrity, InnoDB supports FOREIGN KEY constraints. With foreign keys, inserts, updates, and deletes are checked to ensure they do not result in inconsistencies across related tables.
+
+
+T-tree indexes	No
+Transactions	Yes
+Update statistics for data dictionary	Yes
+Replication support (Implemented in the server, rather than in the storage engine.)	Yes
+Storage limits	64TB
+Index caches	Yes
+Locking granularity	Row
+Clustered indexes	Yes
+Compressed data	Yes
+Data caches	Yes
 
 
 
+CLUSTER INDEX :
+
+	This is simply like a primary key which will be unique and engine uses it search data from DB
+
+	we can also create our own clustered index using the below code
+
+CREATE CLUSTERED INDEX IX_tblStudent_Gender_Score
+ON student(gender ASC, total_score DESC)
+ 
+The process of creating clustered index is similar to a normal index with one exception. With clustered index, you have to use the keyword “CLUSTERED” before “INDEX”.
+
+The above script creates a clustered index named “IX_tblStudent_Gender_Score” on the student table. This index is created on the “gender” and “total_score” columns. An index that is created on more than one column is called “composite index”.
+
+
+Non-Clustered Indexes
+A non-clustered index doesn’t sort the physical data inside the table. In fact, a non-clustered index is stored at one place and table data is stored in another place. This is similar to a textbook where the book content is located in one place and the index is located in another. This allows for more than one non-clustered index per table.
+
+It is important to mention here that inside the table the data will be sorted by a clustered index. However, inside the non-clustered index data is stored in the specified order. The index contains column values on which the index is created and the address of the record that the column value belongs to.
+
+When a query is issued against a column on which the index is created, the database will first go to the index and look for the address of the corresponding row in the table. It will then go to that row address and fetch other column values. It is due to this additional step that non-clustered indexes are slower than clustered indexes.
+
+Creating a Non-Clustered Index
+The syntax for creating a non-clustered index is similar to that of clustered index. However, in case of non-clustered index keyword “NONCLUSTERED” is used instead of “CLUSTERED”. Take a look at the following script.
+
+use schooldb
+ 
+CREATE NONCLUSTERED INDEX IX_tblStudent_Name
+ON student(name ASC)
+ 
+The above script creates a non-clustered index on the “name” column of the student table. The index sorts by name in ascending order. As we said earlier, the table data and index will be stored in different places. The table records will be sorted by a clustered index if there is one. The index will be sorted according to its definition and will be stored separately from the table.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+InnoDB and ACID:
+
+
+The following sections discuss how MySQL features, in particular the InnoDB storage engine, interact with the categories of the ACID model:
+
+A: atomicity.
+
+C: consistency.
+
+I:: isolation.
+
+D: durability.
+
+Atomicity
+The atomicity aspect of the ACID model mainly involves InnoDB transactions. Related MySQL features include:
+
+The autocommit setting.
+
+The COMMIT statement.
+
+The ROLLBACK statement.
+
+Consistency
+The consistency aspect of the ACID model mainly involves internal InnoDB processing to protect data from crashes. Related MySQL features include:
+
+The InnoDB doublewrite buffer. See Section 15.6.4, “Doublewrite Buffer”.
+
+InnoDB crash recovery. See InnoDB Crash Recovery.
+
+Isolation
+The isolation aspect of the ACID model mainly involves InnoDB transactions, in particular the isolation level that applies to each transaction. Related MySQL features include:
+
+The autocommit setting.
+
+Transaction isolation levels and the SET TRANSACTION statement. See Section 15.7.2.1, “Transaction Isolation Levels”.
+
+The low-level details of InnoDB locking. Details can be viewed in the INFORMATION_SCHEMA tables (see Section 15.15.2, “InnoDB INFORMATION_SCHEMA Transaction and Locking Information”) and Performance Schema data_locks and data_lock_waits tables.
+
+Durability
+The durability aspect of the ACID model involves MySQL software features interacting with your particular hardware configuration. Because of the many possibilities depending on the capabilities of your CPU, network, and storage devices, this aspect is the most complicated to provide concrete guidelines for. (And those guidelines might take the form of “buy new hardware”.) Related MySQL features include:
+
+The InnoDB doublewrite buffer. See Section 15.6.4, “Doublewrite Buffer”.
+
+The innodb_flush_log_at_trx_commit variable.
+
+The sync_binlog variable.
+
+The innodb_file_per_table variable.
+
+The write buffer in a storage device, such as a disk drive, SSD, or RAID array.
+
+A battery-backed cache in a storage device.
+
+The operating system used to run MySQL, in particular its support for the fsync() system call.
+
+An uninterruptible power supply (UPS) protecting the electrical power to all computer servers and storage devices that run MySQL servers and store MySQL data.
+
+Your backup strategy, such as frequency and types of backups, and backup retention periods.
+
+For distributed or hosted data applications, the particular characteristics of the data centers where the hardware for the MySQL servers is located, and network connections between the data centers.
+
+-----------------------------------------------------------------------------------------------------------------
+
+Alternative Storage Engines :
+
+	MyISAM, Memory, CSV, Archive, Blackhole, Merge, Federated and Example Storage Engines.
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+Stored Procedure:
+
+Stored objects include these object types:
+
+Stored procedure: An object created with CREATE PROCEDURE and invoked using the CALL statement. A procedure does not have a return value but can modify its parameters for later inspection by the caller. It can also generate result sets to be returned to the client program.
+
+Stored function: An object created with CREATE FUNCTION and used much like a built-in function. You invoke it in an expression and it returns a value during expression evaluation.
+
+Trigger: An object created with CREATE TRIGGER that is associated with a table. A trigger is activated when a particular event occurs for the table, such as an insert or update.
+
+Event: An object created with CREATE EVENT and invoked by the server according to schedule.
+
+View: An object created with CREATE VIEW that when referenced produces a result set. A view acts as a virtual table.
+
+
+Defining Stored Programs
+
+Each stored program contains a body that consists of an SQL statement. This statement may be a compound statement made up of several statements separated by semicolon (;) characters. For example, the following stored procedure has a body made up of a BEGIN ... END block that contains a SET statement and a REPEAT loop that itself contains another SET statement:
+
+
+-- The below statement will cause error and so we need to rewrite the code as
+CREATE PROCEDURE dorepeat(p1 INT)
+BEGIN
+  SET @x = 0;
+  REPEAT SET @x = @x + 1; UNTIL @x > p1 END REPEAT;
+END;
+
+delimiter //
+CREATE PROCEDURE dorepeat(p1 INT)
+BEGIN
+  SET @x = 0;
+  REPEAT SET @x = @x + 1; UNTIL @x > p1 END REPEAT;
+END;dorepeat
+delimiter ;
+
+CALL dorepeat(1000);
+
+SELECT @x;
+
+Typing a function 
+
+CREATE FUNCTION hello (s CHAR(20))
+RETURNS CHAR(50) DETERMINISTIC
+RETURN CONCAT('Hello, ',s,'!');
+
+Query OK, 0 rows affected (0.00 sec)
+
+SELECT hello('world');
++----------------+
+| hello('world') |
++----------------+
+| Hello, world!  |
++----------------+
+1 row in set (0.00 sec)
+
+------------------------------------------------------------------------------------
+
+Using mysqldump for Backups
+
+As a backup to enable data recovery in case of data loss.
+
+As a source of data for setting up replicas.
+
+As a source of data for experimentation:
+
+To make a copy of a database that you can use without changing the original data.
+
+To test potential upgrade incompatibilities.
+
+
+mysqldump produces two types of output, depending on whether the --tab option is given:
+
+Without --tab, mysqldump writes SQL statements to the standard output. This output consists of CREATE statements to create dumped objects (databases, tables, stored routines, and so forth), and INSERT statements to load data into tables. The output can be saved in a file and reloaded later using mysql to recreate the dumped objects. Options are available to modify the format of the SQL statements, and to control which objects are dumped.
+
+With --tab, mysqldump produces two output files for each dumped table. The server writes one file as tab-delimited text, one line per table row. This file is named tbl_name.txt in the output directory. The server also sends a CREATE TABLE statement for the table to mysqldump, which writes it as a file named tbl_name.sql in the output directory.
 
 
 
+Dumping Data in SQL Format with mysqldump
 
 
+By default, mysqldump writes information as SQL statements to the 
+standard output. You can save the output in a file:
+
+	mysqldump [arguments] > file_name
+
+To dump all databases, invoke mysqldump with the --all-databases option:
+
+	mysqldump --all-databases > dump.sql
+
+To dump only specific databases, name them on the command line and use the --databases option:
+
+	mysqldump --databases db1 db2 db3 > dump.sql
+
+The --databases option causes all names on the command line to be treated as database names. 
+Without this option, mysqldump treats the first name as a database name and those following 
+as table names.
+
+With --all-databases or --databases, mysqldump writes CREATE DATABASE and USE statements 
+prior to the dump output for each database.
 
 
+To dump a single database, name it on the command line:
+
+	mysqldump --databases test > dump.sql
+
+In the single-database case, it is permissible to omit the --databases option:
+
+	mysqldump test > dump.sql
+The difference between the two preceding commands is that without --databases, the dump output contains no CREATE DATABASE or USE statements. This has several implications:
+
+To reload a dump file written by mysqldump that consists of SQL statements, use it as input to the mysql client. If the dump file was created by mysqldump with the --all-databases or --databases option, it contains CREATE DATABASE and USE statements and it is not necessary to specify a default database into which to load the data:
+
+	mysql < dump.sql
+Alternatively, from within mysql, use a source command:
+
+	source dump.sql
+If the file is a single-database dump not containing CREATE DATABASE and USE statements, create the database first (if necessary):
+
+	mysqladmin create db1
+Then specify the database name when you load the dump file:
+
+	mysql db1 < dump.sql
+Alternatively, from within mysql, create the database, select it as the default database, and load the dump file:
+
+	CREATE DATABASE IF NOT EXISTS db1;
+	USE db1;
+	source dump.sql
+
+------------------------------------------------------------------------------------------------
 
 
+Data Control Language (DCL)
+
+	the GRANT and REVOKE statements
+	allow us to manage the rights user have in a database
 
 
+	the GRANT statement
+	gives (or grants) certain permissions to users
+
+	one can grant a specific type of permission, like complete or partial access
+
+GRANT type_of_permission ON database_name.table_name TO
+'username'@'loaclhost'
+	these rights will be assigned to a person who has a username registered at local server
+
+	Big companies and corporation don't use this type of server, and their databases 
+	lay on external, more powerful servers
+-------------------------------------------------------------------------------------------------
+
+	To Create an user in the MySQL we give
+	
+CREATE USER 'frank'@'localhost' IDENTIFIED BY 'pass';
+	this line will create an user frank with the password of pass who can access data
+
+GRANT SELECT ON sales.customers to 'frank'@'localhost';
+
+	The above line will allow frank to select data from the table BUT
+	 will not allow him to perform any other action such as DROP TRUNCATE ALTER INSERT DELETE
 
 
+GRANT ALL ON Sales.* to 'frank'@'localhost';
 
+	The above line will allow frank to do all the operations as we have used *
+
+
+	Database administrators
+		- people who have complete rights to a database
+		- they can grant access to users and can revoke it
+
+	the REVOKE clause
+		- used to revoke the permission and privileges of database users
+		- the exact opposite of GRANT
+
+REVOKE type_of_permission ON database_name.table_name FROM 'username'@'localhost';
+
+REVOKE SELECT ON sales.customers FROM 'frank'@'localhost';
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+Relational database
+	
+	Organize huge amount of data that can be quickly retrieved - Well structured - efficient
+
+THE SOLUTION IS TO HAVE RELATIONAL ALGEBRA
+
+	the smallest units in the entire system that can carry integral logical meaning
+
+	Relation Database Management System
+
+	Three steps that are needed is the Database design, Database creation, Database Manipulation
+
+	DATABASE DESIGN plot the entire database system on a canvas using a visualization tool
+
+	Relational Schema :
+		It is an table representation of data using the table name and column name
+		where the Primary key are underlined and the foreign key are given tag (FK)
+
+	
+	DATABASE CREATION use SQL to set up the database physically
+
+	DATABASE MANIPULATION allows you to use your dataset to extract business insights
+
+DBMS = database design + creation + manipulation
+
+-------------------------------------------------------------------------------------------
+
+Relational Schemas : Primary Key 
+	a column (or a set of columns) whise values exists and is unique
+	for every record in a table is called a primary key
+	
+	Normally tables have a tabular form
+	A relational Schema can be applied to represent them 
+
+	EACH VALUE MUST BE UNIQUE AND SHOULD NOT BE NULL
+
+	EACH TABLE CAN HAVE ONE AND ONLY ONE PRIMARY KEY
+	IN A TABLE, YOU CANNOT HAVE 3 OR 4 PRIMARY KEY
+
+Relating two table is done using the PRIMARY KEY and FOREIGN KEY option
+	this is not a compulsion to have both same names can be of different names
+
+
+Relational Schema : Foreign Key
+	
+	Always look for the foreign keys, as they show us where the relations are
+	An foreign key is a primary of its own table and should not repeat or NULL
+	
+	While the column is used as a foreign key it can be NULL and repeated
+	While the column is used as a foreign key it can contain number which are
+	not in the PRIMARY KEY in its own table 
+	
+	Identifies the relationships between tables, not the tables themselves
+
+Relational Schemas : Unique Key & Null Values
+
+	Used whenever you would like to specific that you dont want to see 
+	duplicate data in a given field (column)
+
+			Primary Key	|	unique Key
+			-----------------------------------
+	NULL VALUES		no	|	yes	
+	NO OF KEYS		1	|	0, 1, 2, ..
+			------------------------------------
+	Application
+	to multi-column		YES	|	YES
+
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+RELATIONSHIPS
+	
+	relationships tell you how much of the data from a foreign key
+	field can be seen in the primary key column of the table the data 
+	is related to and vice versa
+
+ONE to MANY type of relationship
+ONE TO ONE type of relationship	
+MANY to MANY type of relationship
+
+-------------------------------------------------------------------------------------
