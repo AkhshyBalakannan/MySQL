@@ -865,9 +865,13 @@ Aggregate Function:
 
 They are often used with a GROUP BY clause to group values into subsets.
 If you use an aggregate function in a statement containing no GROUP BY clause, it is equivalent to grouping on all rows.
-For numeric arguments, the variance and standard deviation functions return a DOUBLE value. The SUM() and AVG() functions return a DECIMAL value for exact-value arguments (integer or DECIMAL), and a DOUBLE value for approximate-value arguments (FLOAT or DOUBLE).
+For numeric arguments, the variance and standard deviation functions return a DOUBLE value. 
+The SUM() and AVG() functions return a DECIMAL value for exact-value arguments (integer or DECIMAL), and 
+a DOUBLE value for approximate-value arguments (FLOAT or DOUBLE).
 
-The SUM() and AVG() aggregate functions do not work with temporal values. (They convert the values to numbers, losing everything after the first nonnumeric character.) To work around this problem, convert to numeric units, perform the aggregate operation, and convert back to a temporal value
+The SUM() and AVG() aggregate functions do not work with temporal values. 
+(They convert the values to numbers, losing everything after the first nonnumeric character.) 
+To work around this problem, convert to numeric units, perform the aggregate operation, and convert back to a temporal value
 
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
@@ -883,12 +887,21 @@ KeyWords and Reserved Words
 CLAUSES:
 
 JOIN Clause:
-	The maximum number of tables that can be referenced in a single join is 61. This includes a join handled by merging derived tables and views in the FROM clause into the outer query block	
-	INNER JOIN and , (comma) are semantically equivalent in the absence of a join condition: both produce a Cartesian product between the specified tables (that is, each and every row in the first table is joined to each and every row in the second table).
-	If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, a row with all columns set to NULL is used for the right table. You can use this fact to find rows in a table that have no counterpart in another table
-	The USING(join_column_list) clause names a list of columns that must exist in both tables. If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
+	The maximum number of tables that can be referenced in a single join is 61. 
+	This includes a join handled by merging derived tables and views in the FROM clause into the outer query block	
+	INNER JOIN and , (comma) are semantically equivalent in the absence of a join condition: 
+	both produce a Cartesian product between the specified tables 
+	(that is, each and every row in the first table is joined to each and every row in the second table).
+	If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, 
+	a row with all columns set to NULL is used for the right table. 
+	You can use this fact to find rows in a table that have no counterpart in another table
+	The USING(join_column_list) clause names a list of columns that must exist in both tables. 
+	If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
 
-In MySQL, JOIN, CROSS JOIN, and INNER JOIN are syntactic equivalents (they can replace each other). In standard SQL, they are not equivalent. INNER JOIN is used with an ON clause, CROSS JOIN is used otherwise.
+In MySQL, JOIN, CROSS JOIN, and INNER JOIN are syntactic equivalents (they can replace each other). 
+In standard SQL, they are not equivalent. 
+
+INNER JOIN is used with an ON clause, CROSS JOIN is used otherwise.
 
 SELECT t1.name, t2.salary
   FROM employee AS t1 INNER JOIN info AS t2 ON t1.name = t2.name;
@@ -901,14 +914,17 @@ This is done to name the table itself
 SELECT * FROM (SELECT 1, 2, 3) AS t1;
 
 
-If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, a row with all columns set to NULL is used for the right table. You can use this fact to find rows in a table that have no counterpart in another table:
+If there is no matching row for the right table in the ON or USING part in a LEFT JOIN, 
+a row with all columns set to NULL is used for the right table. 
+You can use this fact to find rows in a table that have no counterpart in another table:
 
 
 SELECT left_tbl.*
   FROM left_tbl LEFT JOIN right_tbl ON left_tbl.id = right_tbl.id
   WHERE right_tbl.id IS NULL;
 
-The USING(join_column_list) clause names a list of columns that must exist in both tables. If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
+The USING(join_column_list) clause names a list of columns that must exist in both tables. 
+If tables a and b both contain columns c1, c2, and c3, the following join compares corresponding columns from the two tables:
 
 
 a LEFT JOIN b USING (c1, c2, c3)
@@ -928,7 +944,10 @@ SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id
 SELECT * FROM t1 JOIN t2 JOIN t3 ON (i1 = i3);
 
 
-JOIN has higher precedence than the comma operator (,), so the join expression t1, t2 JOIN t3 is interpreted as (t1, (t2 JOIN t3)), not as ((t1, t2) JOIN t3). This affects statements that use an ON clause because that clause can refer only to columns in the operands of the join, and the precedence affects interpretation of what those operands are.
+JOIN has higher precedence than the comma operator (,), 
+so the join expression t1, t2 JOIN t3 is interpreted as (t1, (t2 JOIN t3)), not as ((t1, t2) JOIN t3). 
+This affects statements that use an ON clause because that clause can refer only to columns in the operands 
+of the join, and the precedence affects interpretation of what those operands are.
 
 
 CREATE TABLE t1 (i1 INT, j1 INT);
@@ -1025,12 +1044,18 @@ A self-referencing CTE is recursive.
 
 A CTE can refer to CTEs defined earlier in the same WITH clause, but not those defined later.
 
-This constraint rules out mutually-recursive CTEs, where cte1 references cte2 and cte2 references cte1. One of those references must be to a CTE defined later, which is not permitted.
+This constraint rules out mutually-recursive CTEs, where cte1 references cte2 and cte2 references cte1. 
+One of those references must be to a CTE defined later, which is not permitted.
 
-A CTE in a given query block can refer to CTEs defined in query blocks at a more outer level, but not CTEs defined in query blocks at a more inner level.
+A CTE in a given query block can refer to CTEs defined in query blocks at a more outer level, 
+but not CTEs defined in query blocks at a more inner level.
+
 
 Common Table Expressions
-To specify common table expressions, use a WITH clause that has one or more comma-separated subclauses. Each subclause provides a subquery that produces a result set, and associates a name with the subquery. The following example defines CTEs named cte1 and cte2 in the WITH clause, and refers to them in the top-level SELECT that follows the WITH clause:
+
+To specify common table expressions, use a WITH clause that has one or more comma-separated subclauses. 
+Each subclause provides a subquery that produces a result set, and associates a name with the subquery. 
+The following example defines CTEs named cte1 and cte2 in the WITH clause, and refers to them in the top-level SELECT that follows the WITH clause:
 
 WITH
   cte1 AS (SELECT a, b FROM table1),
@@ -1070,7 +1095,8 @@ When executed, the statement produces this result, a single column containing a 
 +------+
 A recursive CTE has this structure:
 
-The WITH clause must begin with WITH RECURSIVE if any CTE in the WITH clause refers to itself. (If no CTE refers to itself, RECURSIVE is permitted but not required.)
+The WITH clause must begin with WITH RECURSIVE if any CTE in the WITH clause refers to itself. 
+(If no CTE refers to itself, RECURSIVE is permitted but not required.)
 
 If you forget RECURSIVE for a recursive CTE, this error is a likely result:
 
@@ -1100,7 +1126,8 @@ Keys and Constraints:
 
 Foreign Key:
 	
-MySQL supports foreign keys, which permit cross-referencing related data across tables, and foreign key constraints, which help keep the related data consistent.
+MySQL supports foreign keys, which permit cross-referencing related data across tables, and 
+foreign key constraints, which help keep the related data consistent.
 
 Simply a foreign key is used to tell MySQL and To refer another table from one
 the syntax for is is column_name INT, FOREIGN KEY (column_name) REFERENCES table_name(column_name)
@@ -1351,7 +1378,7 @@ A: atomicity.
 
 C: consistency.
 
-I:: isolation.
+I: isolation.
 
 D: durability.
 
@@ -1416,11 +1443,15 @@ Stored Procedure:
 
 Stored objects include these object types:
 
-Stored procedure: An object created with CREATE PROCEDURE and invoked using the CALL statement. A procedure does not have a return value but can modify its parameters for later inspection by the caller. It can also generate result sets to be returned to the client program.
+Stored procedure: An object created with CREATE PROCEDURE and invoked using the CALL statement. 
+A procedure does not have a return value but can modify its parameters for later inspection by the caller. 
+It can also generate result sets to be returned to the client program.
 
-Stored function: An object created with CREATE FUNCTION and used much like a built-in function. You invoke it in an expression and it returns a value during expression evaluation.
+Stored function: An object created with CREATE FUNCTION and used much like a built-in function. 
+You invoke it in an expression and it returns a value during expression evaluation.
 
-Trigger: An object created with CREATE TRIGGER that is associated with a table. A trigger is activated when a particular event occurs for the table, such as an insert or update.
+Trigger: An object created with CREATE TRIGGER that is associated with a table. 
+A trigger is activated when a particular event occurs for the table, such as an insert or update.
 
 Event: An object created with CREATE EVENT and invoked by the server according to schedule.
 
@@ -1429,7 +1460,10 @@ View: An object created with CREATE VIEW that when referenced produces a result 
 
 Defining Stored Programs
 
-Each stored program contains a body that consists of an SQL statement. This statement may be a compound statement made up of several statements separated by semicolon (;) characters. For example, the following stored procedure has a body made up of a BEGIN ... END block that contains a SET statement and a REPEAT loop that itself contains another SET statement:
+Each stored program contains a body that consists of an SQL statement. 
+This statement may be a compound statement made up of several statements separated by semicolon (;) characters. 
+For example, the following stored procedure has a body made up of a BEGIN ... END block 
+that contains a SET statement and a REPEAT loop that itself contains another SET statement:
 
 
 -- The below statement will cause error and so we need to rewrite the code as
@@ -1484,9 +1518,17 @@ To test potential upgrade incompatibilities.
 
 mysqldump produces two types of output, depending on whether the --tab option is given:
 
-Without --tab, mysqldump writes SQL statements to the standard output. This output consists of CREATE statements to create dumped objects (databases, tables, stored routines, and so forth), and INSERT statements to load data into tables. The output can be saved in a file and reloaded later using mysql to recreate the dumped objects. Options are available to modify the format of the SQL statements, and to control which objects are dumped.
+Without --tab, mysqldump writes SQL statements to the standard output. 
+This output consists of CREATE statements to create dumped objects (databases, tables, stored routines, and so forth), 
+and INSERT statements to load data into tables. 
+The output can be saved in a file and reloaded later using mysql to recreate the dumped objects. 
+Options are available to modify the format of the SQL statements, and to control which objects are dumped.
 
-With --tab, mysqldump produces two output files for each dumped table. The server writes one file as tab-delimited text, one line per table row. This file is named tbl_name.txt in the output directory. The server also sends a CREATE TABLE statement for the table to mysqldump, which writes it as a file named tbl_name.sql in the output directory.
+With --tab, mysqldump produces two output files for each dumped table. 
+The server writes one file as tab-delimited text, one line per table row. 
+This file is named tbl_name.txt in the output directory. 
+The server also sends a CREATE TABLE statement for the table to mysqldump, 
+which writes it as a file named tbl_name.sql in the output directory.
 
 
 
@@ -1521,9 +1563,12 @@ To dump a single database, name it on the command line:
 In the single-database case, it is permissible to omit the --databases option:
 
 	mysqldump test > dump.sql
-The difference between the two preceding commands is that without --databases, the dump output contains no CREATE DATABASE or USE statements. This has several implications:
+The difference between the two preceding commands is that without --databases, 
+the dump output contains no CREATE DATABASE or USE statements. This has several implications:
 
-To reload a dump file written by mysqldump that consists of SQL statements, use it as input to the mysql client. If the dump file was created by mysqldump with the --all-databases or --databases option, it contains CREATE DATABASE and USE statements and it is not necessary to specify a default database into which to load the data:
+To reload a dump file written by mysqldump that consists of SQL statements, use it as input to the mysql client. 
+If the dump file was created by mysqldump with the --all-databases or --databases option, 
+it contains CREATE DATABASE and USE statements and it is not necessary to specify a default database into which to load the data:
 
 	mysql < dump.sql
 Alternatively, from within mysql, use a source command:
